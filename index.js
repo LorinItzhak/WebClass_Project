@@ -16,6 +16,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 const postRoutes = require("./routes/posts_routes.js");
 app.use("/posts", postRoutes);
+
+const commentRoutes = require("./routes/comments_routes.js");
+app.use("/comment", commentRoutes);
+
 app.listen(port, () =>{
     console.log(`Example app listening at http://localhost:${port}`);
 });
