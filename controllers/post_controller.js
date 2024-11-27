@@ -44,12 +44,6 @@ const getPostById = async (req, res) => {
 };
 
 
-
-const deleteAPost = (req,res)=> {
-    console.log("delete a post");
-    res.send("delete a post");
-};
-
 const updateAPost = async(req,res)=> {
     const postId = req.params.id;
     if (!mongoose.Types.ObjectId.isValid(postId)) {
@@ -73,4 +67,4 @@ const updateAPost = async(req,res)=> {
 
 
 
-module.exports = {AddANewPost, getAllPost , deleteAPost,updateAPost,getPostById};
+module.exports = {AddANewPost, getAllPost , updateAPost,getPostById};
