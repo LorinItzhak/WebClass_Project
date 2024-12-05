@@ -1,30 +1,30 @@
 
 ###
-GET http://localhost:3001/posts
+GET http://localhost:3000/posts
 
 ###
-GET http://localhost:3001/posts/123
+GET http://localhost:3000/posts/674f0eb7c8ec098c8fd76400
 
 ###
-GET http://localhost:3001/posts?owner=Lorin2
+GET http://localhost:3000/posts?owner=gil1234
 
 
 ###
-POST  http://localhost:3001/posts
+POST  http://localhost:3000/posts
 Content-Type: application/json
 
 {
-    "title": "my first post",
-    "content":"This is my second post",
-    "owner":"Lorin2"
+    "title": "my third post",
+    "content":"This is my third post",
+    "owner":"gilMoshe"
 }
 
 ###
-PUT  http://localhost:3001/posts/67433672c31def3b7fa766ad
+PUT  http://localhost:3000/posts/674f0eb7c8ec098c8fd76400
 Content-Type: application/json
 
 {
     "title": "My update post",
     "content": "This is my update post",
-    "owner": "user1234"
+    "owner": "gil1234"
 }
