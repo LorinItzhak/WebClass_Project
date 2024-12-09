@@ -2,6 +2,7 @@ import express,{Express} from 'express';
 const app = express();
 import dotenv from "dotenv";
 dotenv.config();
+
 import mongoose from "mongoose";
 import postsRoutes from './routes/posts_routes';
 import commentsRoutes from './routes/comments_routes';
@@ -33,7 +34,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 
 app.use("/posts", postsRoutes);
-app.use("/comment", commentsRoutes);
+app.use("/comments", commentsRoutes);
 
 app.get("/about", (req,res)=>{
     res.send("About page");

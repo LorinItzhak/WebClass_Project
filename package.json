@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "devstart": "nodemon .src/app.js",
-    "start": "tsc && node dist/app.js",
-    "test": " tsc && jest --detectOpenHandles --forceExit",
+    "dev": "nodemon ./src/app.ts",
+    "start": "tsc && node ./dist/app.js",
+    "test": "tsc && jest --detectOpenHandles --forceExit --coverage",
     "lint": "eslint . --ext .ts"
   },
   "repository": {
@@ -20,7 +20,7 @@
   "homepage": "https://github.com/LorinItzhak/Assignment_1_WebClass#readme",
   "description": "",
   "dependencies": {
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "mongoose": "^8.8.3"
   },

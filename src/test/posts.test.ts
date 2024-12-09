@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import postModel from"../models/posts_model";
 import { Express } from "express";
 
-let app : Express;
+let app:Express;
 
 beforeAll(async()=>{
      app= await initApp();

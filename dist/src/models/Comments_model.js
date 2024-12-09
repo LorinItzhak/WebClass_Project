@@ -6,11 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const Schema = mongoose_1.default.Schema;
 const commentSchema = new Schema({
-    postId: {
+    comment: {
         type: String,
         required: true,
     },
-    content: {
+    postId: {
         type: String,
         required: true,
     },
@@ -19,6 +19,6 @@ const commentSchema = new Schema({
         required: true,
     },
 });
-const comment = mongoose_1.default.model("comment", commentSchema);
-exports.default = comment;
+const commentModel = mongoose_1.default.model("comments", commentSchema);
+exports.default = commentModel;
 //# sourceMappingURL=Comments_model.js.map
