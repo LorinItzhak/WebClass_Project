@@ -18,6 +18,26 @@ async AddANew (req:Request,res:Response ){
     }
   };
 
+  async deleteComment(req: Request, res: Response) {
+    const commentId = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(commentId)) {
+        return res.status(400).send("Invalid comment ID format");
+    }
+
+    try {
+        const deletedComment = await this.model.findByIdAndDelete(commentId);
+
+        if (!deletedComment) {
+            return res.status(404).send("Comment not found");
+        }
+
+        res.send(deletedComment);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+}
+
+
 async getAll(req:Request,res:Response ) {
     const filter= req.query;
     console.log(filter);
