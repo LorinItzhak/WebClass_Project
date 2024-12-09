@@ -1,18 +1,19 @@
-const Posts= require("../models/posts_model");
-const mongoose = require("mongoose");
+import Posts from "../models/posts_model";
+import mongoose from "mongoose";
+import { Request, Response } from "express";
 
-const AddANewPost = async (req,res)=> {
+const AddANewPost = async (req:Request,res:Response)=> {
     console.log(req.body);
     try{
     const post = await Posts.create(req.body);
     res.status(201).send(post);
     }
     catch(err){
-        res.status(400).send(err.message);
+        res.status(400).send(err);
     }
   };
 
-const getAllPost = async(req,res)=> {
+const getAllPost = async(req:Request,res:Response)=> {
     const filter= req.query;
     console.log(filter);
     try{
@@ -25,10 +26,10 @@ const getAllPost = async(req,res)=> {
        return res.send(posts);
         }
     }
-    catch(err){ return res.status(400).send(err.message);}
+    catch(err){ return res.status(400).send(err);}
 };
 
-const getPostById = async (req, res) => {
+const getPostById = async (req:Request,res:Response) => {
     const postId = req.params.id;
     try {
         const post = await Posts.findById(postId);
@@ -44,7 +45,7 @@ const getPostById = async (req, res) => {
 };
 
 
-const updateAPost = async(req,res)=> {
+const updateAPost = async(req:Request,res:Response)=> {
     const postId = req.params.id;
     if (!mongoose.Types.ObjectId.isValid(postId)) {
         return res.status(400).send("Invalid post ID format");
@@ -60,11 +61,11 @@ const updateAPost = async(req,res)=> {
 
         res.send(updatedPost); 
     } catch (err) {
-        res.status(400).send(err.message);
+        res.status(400).send(err);
     }
 };
 
 
 
 
-module.exports = {AddANewPost, getAllPost , updateAPost,getPostById};
+export default  {AddANewPost, getAllPost , updateAPost,getPostById};
