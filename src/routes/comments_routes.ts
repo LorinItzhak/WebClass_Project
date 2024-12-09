@@ -17,5 +17,9 @@ router.put('/:id',(req,res)=>{
     comment_.updateA(req,res);
 });
 
+router.delete('/:id',(req,res)=>{
+    comment_.deleteComment(req,res);
+}); 
+
 export default router;
  
