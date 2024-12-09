@@ -1,71 +1,8 @@
-import Posts from "../models/posts_model";
+import PostModel,{IPost} from "../models/posts_model";
 import mongoose from "mongoose";
 import { Request, Response } from "express";
+import createController from "./base_controller";
 
-const AddANewPost = async (req:Request,res:Response)=> {
-    console.log(req.body);
-    try{
-    const post = await Posts.create(req.body);
-    res.status(201).send(post);
-    }
-    catch(err){
-        res.status(400).send(err);
-    }
-  };
+const postController = createController<IPost>(PostModel);
 
-const getAllPost = async(req:Request,res:Response)=> {
-    const filter= req.query;
-    console.log(filter);
-    try{
-        if(filter.owner){
-            const posts = await Posts.find({owner: filter.owner});
-            return res.send(posts);
-        }
-        else{
-        const posts= await Posts.find()
-       return res.send(posts);
-        }
-    }
-    catch(err){ return res.status(400).send(err);}
-};
-
-const getPostById = async (req:Request,res:Response) => {
-    const postId = req.params.id;
-    try {
-        const post = await Posts.findById(postId);
-        if(post=== null){
-          return res.status(404).send("post not found");  
-        } else {
-            return res.status(200).send(post);
-        }
-    } catch (err) {
-        console.log(err)
-         res.status(404).send(err);
-    }
-};
-
-
-const updateAPost = async(req:Request,res:Response)=> {
-    const postId = req.params.id;
-    if (!mongoose.Types.ObjectId.isValid(postId)) {
-        return res.status(400).send("Invalid post ID format");
-    }
-
- try {
-     
- const updatedPost = await Posts.findByIdAndUpdate( postId, req.body,{ new: true, runValidators: true });
-
-        if (!updatedPost) {
-            return res.status(404).send("Post not found");
-        }
-
-        res.send(updatedPost); 
-    } catch (err) {
-        res.status(400).send(err);
-    }
-};
-
-
-
-
-export default  {AddANewPost, getAllPost , updateAPost,getPostById};
+export default postController;

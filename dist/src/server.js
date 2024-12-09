@@ -32,7 +32,7 @@ const initApp = () => {
                 app.use(body_parser_1.default.json());
                 app.use(body_parser_1.default.urlencoded({ extended: true }));
                 app.use("/posts", posts_routes_1.default);
-                app.use("/comment", comments_routes_1.default);
+                app.use("/comments", comments_routes_1.default);
                 app.get("/about", (req, res) => {
                     res.send("About page");
                 });

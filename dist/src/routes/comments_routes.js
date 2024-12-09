@@ -6,18 +6,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const comment_controllers_1 = __importDefault(require("../controllers/comment_controllers"));
-router.post('/', comment_controllers_1.default.AddANewComment);
-router.get('/', (req, res) => {
-    comment_controllers_1.default.getAllComments(req, res);
+router.post('/', (req, res) => {
+    comment_controllers_1.default.AddANew(req, res);
 });
 router.get('/', (req, res) => {
-    comment_controllers_1.default.getCommentById(req, res);
+    comment_controllers_1.default.getAll(req, res);
 });
-router.delete('/:id', (req, res) => {
-    comment_controllers_1.default.deleteComment(req, res);
+router.get('/:id', (req, res) => {
+    comment_controllers_1.default.getById(req, res);
 });
 router.put('/:id', (req, res) => {
-    comment_controllers_1.default.updateComment(req, res);
+    comment_controllers_1.default.updateA(req, res);
 });
 exports.default = router;
 //# sourceMappingURL=comments_routes.js.map
