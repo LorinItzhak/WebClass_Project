@@ -2,11 +2,11 @@ import express,{Express} from 'express';
 const app = express();
 import dotenv from "dotenv";
 dotenv.config();
-
 import mongoose from "mongoose";
 import postsRoutes from './routes/posts_routes';
 import commentsRoutes from './routes/comments_routes';
 import bodyParser from 'body-parser';
+import userRoutes from './routes/user_routes';
 
 const initApp=()=> { 
  return new Promise<Express>((resolve,reject)=>{
@@ -35,6 +35,8 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 app.use("/posts", postsRoutes);
 app.use("/comments", commentsRoutes);
+app.use("/user", userRoutes);
+
 
 app.get("/about", (req,res)=>{
     res.send("About page");

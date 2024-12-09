@@ -6,7 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const comment_controllers_1 = __importDefault(require("../controllers/comment_controllers"));
-router.post('/', (req, res) => {
+const user_controller_1 = require("../controllers/user_controller");
+router.post('/', user_controller_1.authMiddleware, (req, res) => {
     comment_controllers_1.default.AddANew(req, res);
 });
 router.get('/', (req, res) => {
@@ -17,6 +18,9 @@ router.get('/:id', (req, res) => {
 });
 router.put('/:id', (req, res) => {
     comment_controllers_1.default.updateA(req, res);
+});
+router.delete('/:id', user_controller_1.authMiddleware, (req, res) => {
+    comment_controllers_1.default.deleteComment(req, res);
 });
 exports.default = router;
 //# sourceMappingURL=comments_routes.js.map

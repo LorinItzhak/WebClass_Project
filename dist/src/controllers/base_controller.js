@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseController = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 class BaseController {
     constructor(model) {
@@ -30,6 +31,24 @@ class BaseController {
         });
     }
     ;
+    deleteComment(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const commentId = req.params.id;
+            if (!mongoose_1.default.Types.ObjectId.isValid(commentId)) {
+                return res.status(400).send("Invalid comment ID format");
+            }
+            try {
+                const deletedComment = yield this.model.findByIdAndDelete(commentId);
+                if (!deletedComment) {
+                    return res.status(404).send("Comment not found");
+                }
+                res.send(deletedComment);
+            }
+            catch (err) {
+                res.status(400).send(err);
+            }
+        });
+    }
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const filter = req.query;
@@ -89,6 +108,7 @@ class BaseController {
     }
     ;
 }
+exports.BaseController = BaseController;
 const createController = (model) => {
     return new BaseController(model);
 };
