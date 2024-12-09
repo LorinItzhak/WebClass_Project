@@ -6,7 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const post_controller_1 = __importDefault(require("../controllers/post_controller"));
-router.post('/', post_controller_1.default.AddANew.bind(post_controller_1.default));
+const user_controller_1 = require("../controllers/user_controller");
+router.post('/', user_controller_1.authMiddleware, post_controller_1.default.AddANew.bind(post_controller_1.default));
 router.get('/', (req, res) => {
     post_controller_1.default.getAll(req, res);
 });
@@ -16,5 +17,8 @@ router.get('/:id', (req, res) => {
 router.put('/:id', (req, res) => {
     post_controller_1.default.updateA(req, res);
 });
+// router.delete("/:id", authMiddleware, (req: Request, res: Response) => {
+//     post_.deleteItem(req, res);
+// });
 exports.default = router;
 //# sourceMappingURL=posts_routes.js.map

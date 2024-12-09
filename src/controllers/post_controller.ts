@@ -1,8 +1,22 @@
 import PostModel,{IPost} from "../models/posts_model";
 import mongoose from "mongoose";
 import { Request, Response } from "express";
-import createController from "./base_controller";
+import {BaseController} from "./base_controller";
 
-const postController = createController<IPost>(PostModel);
+class PostController extends BaseController<IPost>{
+    constructor() {
+        super(PostModel);
+    }
 
-export default postController;
+    async AddANew(req: Request, res: Response) {
+        const userId = req.params.userId;
+        const post = {
+            ...req.body,
+            owner: userId
+        }
+        req.body = post;
+        super.AddANew(req, res);
+    }; 
+}
+
+export default new PostController();

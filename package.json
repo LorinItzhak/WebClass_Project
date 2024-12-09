@@ -4,8 +4,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./src/app.ts",
-    "start": "tsc && node ./dist/app.js",
+    "start": "tsc && node ./dist/src/app.js",
     "test": "tsc && jest --detectOpenHandles --forceExit --coverage",
+    "testUser": "tsc && jest --detectOpenHandles --forceExit --coverage user.test.ts",
     "lint": "eslint . --ext .ts"
   },
   "repository": {
@@ -20,14 +21,18 @@
   "homepage": "https://github.com/LorinItzhak/Assignment_1_WebClass#readme",
   "description": "",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.16.0",
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.1",
     "@types/jest": "^29.5.14",
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/supertest": "^6.0.2",
     "eslint": "^9.16.0",
     "globals": "^15.13.0",

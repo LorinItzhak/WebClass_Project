@@ -8,7 +8,6 @@ dotenv_1.default.config();
 const server_1 = __importDefault(require("./server"));
 const port = process.env.PORT;
 (0, server_1.default)().then((app) => {
-    console.log(process.env.PORT); // זה צריך להחזיר את הפורט שהגדרת ב-.env
     app.listen(port, () => {
         console.log(`Example app listening at http://localhost:${port}`);
     });

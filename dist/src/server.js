@@ -11,6 +11,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const posts_routes_1 = __importDefault(require("./routes/posts_routes"));
 const comments_routes_1 = __importDefault(require("./routes/comments_routes"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const user_routes_1 = __importDefault(require("./routes/user_routes"));
 const initApp = () => {
     return new Promise((resolve, reject) => {
         const db = mongoose_1.default.connection;
@@ -33,6 +34,7 @@ const initApp = () => {
                 app.use(body_parser_1.default.urlencoded({ extended: true }));
                 app.use("/posts", posts_routes_1.default);
                 app.use("/comments", comments_routes_1.default);
+                app.use("/user", user_routes_1.default);
                 app.get("/about", (req, res) => {
                     res.send("About page");
                 });
