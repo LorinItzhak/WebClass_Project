@@ -17,23 +17,30 @@ const server_1 = __importDefault(require("../server"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const posts_model_1 = __importDefault(require("../models/posts_model"));
 let app;
+const testUser = {
+    email: "test@user.com",
+    password: "123456",
+};
+let accessToken;
+var postId = "";
+const testPost = {
+    title: "Test title",
+    content: "Test content",
+    owner: "Eliav",
+};
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, server_1.default)();
-    console.log('beforeAll');
     yield posts_model_1.default.deleteMany();
+    const response = yield (0, supertest_1.default)(app).post("/auth/register").send(testUser);
+    const response2 = yield (0, supertest_1.default)(app).post("/auth/login").send(testUser);
+    expect(response2.statusCode).toBe(200);
+    accessToken = response2.body.token;
+    testPost.owner = response2.body._id;
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('afterAll');
     yield mongoose_1.default.connection.close();
 }));
-let postId = "";
-const testPost = {
-    title: "test title",
-    content: "test content",
-    owner: "lorin",
-};
 const invalidPost = {
-    title: "test title",
     content: "test content",
 };
 describe("Posts test suite", () => {
@@ -42,16 +49,19 @@ describe("Posts test suite", () => {
         expect(response.statusCode).toBe(200);
         expect(response.body).toHaveLength(0);
     }));
-    test("test adding a new post", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/posts").send(testPost);
+    test("Test Addding new post", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).post("/posts").set({
+            authorization: "JWT " + accessToken,
+        }).send(testPost);
         expect(response.statusCode).toBe(201);
         expect(response.body.title).toBe(testPost.title);
         expect(response.body.content).toBe(testPost.content);
-        expect(response.body.owner).toBe(testPost.owner);
         postId = response.body._id;
     }));
-    test("test adding invalid post", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/posts").send(invalidPost);
+    test("Test Addding invalid post", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).post("/posts").set({
+            authorization: "JWT " + accessToken,
+        }).send(invalidPost);
         expect(response.statusCode).not.toBe(201);
     }));
     test("test get all posts after adding", () => __awaiter(void 0, void 0, void 0, function* () {

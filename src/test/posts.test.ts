@@ -6,27 +6,36 @@ import { Express } from "express";
 
 let app:Express;
 
+const testUser = {
+    email: "test@user.com",
+    password: "123456",
+  }
+  let accessToken: string;
+  var postId = "";
+  
+  const testPost = {
+    title: "Test title",
+    content: "Test content",
+    owner: "Eliav",
+  };
+
+
 beforeAll(async()=>{
      app= await initApp();
-    console.log('beforeAll');
      await postModel.deleteMany();
+     const response = await request(app).post("/auth/register").send(testUser);
+     const response2 = await request(app).post("/auth/login").send(testUser);
+     expect(response2.statusCode).toBe(200);
+     accessToken = response2.body.token;
+     testPost.owner = response2.body._id;
 });
 
 afterAll(async()=>{
-    console.log('afterAll');
     await mongoose.connection.close();
      
 });
 
-let postId="";
-const testPost={
-    title: "test title",
-    content: "test content",
-    owner: "lorin",
-};
-
 const invalidPost={
-    title: "test title",
     content: "test content",
 };
 
@@ -38,23 +47,23 @@ describe("Posts test suite", ()=> {
     });
 
 
-test("test adding a new post", async () => {
-    const response = await request(app).post("/posts").send(testPost);
+    test("Test Addding new post", async () => {
+        const response = await request(app).post("/posts").set({
+          authorization: "JWT " + accessToken,
+        }).send(testPost);
+        expect(response.statusCode).toBe(201);
+        expect(response.body.title).toBe(testPost.title);
+        expect(response.body.content).toBe(testPost.content);
+        postId = response.body._id;
+      });
 
-    expect(response.statusCode).toBe(201);
-    expect(response.body.title).toBe(testPost.title);
-    expect(response.body.content).toBe(testPost.content);
-    expect(response.body.owner).toBe(testPost.owner);
-    postId=response.body._id;
-});
 
-
-test("test adding invalid post", async () => {
-    const response = await request(app).post("/posts").send(invalidPost);
-
-    expect(response.statusCode).not.toBe(201); 
-});
-
+      test("Test Addding invalid post", async () => {
+        const response = await request(app).post("/posts").set({
+          authorization: "JWT " + accessToken,
+        }).send(invalidPost);
+        expect(response.statusCode).not.toBe(201);
+      });
 
 test("test get all posts after adding", async () => {
     const response = await request(app).get("/posts");
