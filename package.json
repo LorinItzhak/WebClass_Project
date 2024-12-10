@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "nodemon ./src/app.ts",
     "start": "tsc && node ./dist/src/app.js",
-    "test": "tsc && jest --detectOpenHandles --forceExit --coverage",
-    "testUser": "tsc && jest --detectOpenHandles --forceExit --coverage user.test.ts",
+    "test": "tsc && jest --detectOpenHandles --forceExit --runInBand",
+    "testUser": "tsc && jest --detectOpenHandles --forceExit user.test.ts",
+    "testPosts": "tsc && jest --detectOpenHandles --forceExit posts.test.ts",
     "lint": "eslint . --ext .ts"
   },
   "repository": {

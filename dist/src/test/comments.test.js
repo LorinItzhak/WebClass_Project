@@ -17,6 +17,11 @@ const server_1 = __importDefault(require("../server"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const Comments_model_1 = __importDefault(require("../models/Comments_model"));
 let app;
+const testUser = {
+    email: "test@user.com",
+    password: "123456",
+};
+let accessToken;
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, server_1.default)();
     console.log('beforeAll');

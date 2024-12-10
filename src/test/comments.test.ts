@@ -6,6 +6,15 @@ import { Express } from "express";
 
 let app:Express;
 
+const testUser = {
+    email: "test@user.com",
+    password: "123456",
+  }
+  
+  let accessToken: string;
+  
+
+
 beforeAll(async()=>{
      app= await initApp();
     console.log('beforeAll');
