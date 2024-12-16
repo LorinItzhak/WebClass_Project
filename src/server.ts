@@ -35,7 +35,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 app.use("/posts", postsRoutes);
 app.use("/comments", commentsRoutes);
-app.use("/user", userRoutes);
+app.use("/users", userRoutes);
 
 
 app.get("/about", (req,res)=>{

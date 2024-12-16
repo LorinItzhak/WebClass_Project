@@ -16,27 +16,43 @@ const supertest_1 = __importDefault(require("supertest"));
 const server_1 = __importDefault(require("../server"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const Comments_model_1 = __importDefault(require("../models/Comments_model"));
+const user_model_1 = __importDefault(require("../models/user_model"));
 let app;
 const testUser = {
     email: "test@user.com",
     password: "123456",
 };
+const testComment = {
+    comment: "test content",
+    postId: "idididid",
+    owner: null,
+};
 let accessToken;
+let userId;
+let commentId;
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, server_1.default)();
     console.log('beforeAll');
     yield Comments_model_1.default.deleteMany();
+    yield user_model_1.default.deleteMany();
+    // Register user
+    const registerResponse = yield (0, supertest_1.default)(app)
+        .post("/users/register")
+        .send(testUser);
+    expect(registerResponse.statusCode).toBe(201);
+    // Login user
+    const loginResponse = yield (0, supertest_1.default)(app)
+        .post("/users/login")
+        .send(testUser);
+    expect(loginResponse.statusCode).toBe(200);
+    accessToken = loginResponse.body.token;
+    userId = loginResponse.body._id;
+    testComment.owner = userId;
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     console.log('afterAll');
     yield mongoose_1.default.connection.close();
 }));
-let commentId = "";
-const testComment = {
-    comment: "test content",
-    postId: "idididid",
-    owner: "lorin",
-};
 const invalidComment = {
     comment: "test content",
 };
@@ -47,7 +63,9 @@ describe("Comments test suite", () => {
         expect(response.body).toHaveLength(0);
     }));
     test("test adding a new Comment", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/comments").send(testComment);
+        const response = yield (0, supertest_1.default)(app).post("/comments").set({
+            authorization: "Bearer " + accessToken,
+        }).send(testComment);
         expect(response.statusCode).toBe(201);
         expect(response.body.comment).toBe(testComment.comment);
         expect(response.body.postId).toBe(testComment.postId);
@@ -55,7 +73,9 @@ describe("Comments test suite", () => {
         commentId = response.body._id;
     }));
     test("test adding invalid Comment", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/comments").send(invalidComment);
+        const response = yield (0, supertest_1.default)(app).post("/comments").set({
+            authorization: "Bearer " + accessToken,
+        }).send(invalidComment);
         expect(response.statusCode).not.toBe(201);
     }));
     test("test get all Comments after adding", () => __awaiter(void 0, void 0, void 0, function* () {
