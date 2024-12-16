@@ -19,7 +19,29 @@ let postId: string;
 const testPost = {
     title: "Test title",
     content: "Test content",
+    owner: null as string | null,
+};
 
+
+beforeAll(async () => {
+  app = await initApp();
+  await postModel.deleteMany();
+  await userModel.deleteMany();
+  // Register user
+  const registerResponse = await request(app)
+    .post("/users/register")
+    .send(testUser);
+  expect(registerResponse.statusCode).toBe(201);
+
+  // Login user
+  const loginResponse = await request(app)
+    .post("/users/login")
+    .send(testUser);
+  expect(loginResponse.statusCode).toBe(200);
+
+  accessToken = loginResponse.body.token;
+  userId = loginResponse.body._id;
+  testPost.owner = userId;
 });
 
 afterAll(async()=>{
