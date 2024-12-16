@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 export interface IComment {
     comment: string;
     postId: string;
-    owner: string;
+    owner: mongoose.Types.ObjectId;
 }
 
 const commentSchema = new Schema<IComment>({
@@ -17,7 +17,8 @@ const commentSchema = new Schema<IComment>({
         required:true,
     },
     owner:{
-        type:String,
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required:true,
     },
 });

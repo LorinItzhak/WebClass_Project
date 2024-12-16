@@ -26,7 +26,7 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));
-const baseUrl = "/user";
+const baseUrl = "/users";
 const userInfo = {
     email: "lorinn2@icloud.com",
     password: "123456",
@@ -34,20 +34,20 @@ const userInfo = {
 describe("user test", () => {
     test("user Registration", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).post(baseUrl + "/register").send(userInfo);
-        expect(response.statusCode).toBe(200);
+        expect(response.statusCode).toBe(201);
     }));
     test("user Registration no password ", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).post(baseUrl + "/register").send({
             email: "hugiugiu",
         });
-        expect(response.statusCode).not.toBe(200);
+        expect(response.statusCode).not.toBe(201);
     }));
     test("user Registration email already exist ", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).post(baseUrl + "/register").send(userInfo);
-        expect(response.statusCode).not.toBe(200);
+        expect(response.statusCode).not.toBe(201);
     }));
     test("user Login", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/user/login").send(userInfo);
+        const response = yield (0, supertest_1.default)(app).post(baseUrl + "/login").send(userInfo);
         console.log(response.body);
         expect(response.statusCode).toBe(200);
         const token = response.body.token;

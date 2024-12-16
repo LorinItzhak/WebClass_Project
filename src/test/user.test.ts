@@ -10,7 +10,7 @@ let app:Express;
 beforeAll(async()=>{
      app= await initApp();
      await userModel.deleteMany();
-        await PostModel.deleteMany(); 
+     await PostModel.deleteMany(); 
 });
 
 afterAll(async()=>{
@@ -18,7 +18,7 @@ afterAll(async()=>{
      
 });
 
-const baseUrl="/user";
+const baseUrl="/users";
 
 type UserInfo={
     email:string;
@@ -34,7 +34,7 @@ const userInfo:UserInfo ={
 describe("user test", ()=> {
     test("user Registration",async ()=>{
        const response = await request(app).post(baseUrl + "/register").send(userInfo);
-       expect(response.statusCode).toBe(200);
+       expect(response.statusCode).toBe(201);
       
     });
 
@@ -42,18 +42,18 @@ describe("user test", ()=> {
         const response = await request(app).post(baseUrl+ "/register").send({
             email:"hugiugiu",
         });
-        expect(response.statusCode).not.toBe(200);
+        expect(response.statusCode).not.toBe(201);
        
      });
 
     test("user Registration email already exist ",async ()=>{
         const response = await request(app).post(baseUrl+ "/register").send(userInfo);
-        expect(response.statusCode).not.toBe(200);
+        expect(response.statusCode).not.toBe(201);
        
      });
 
     test("user Login",async ()=>{
-        const response = await request(app).post("/user/login").send(userInfo);
+        const response = await request(app).post(baseUrl+"/login").send(userInfo);
         console.log(response.body);
         expect(response.statusCode).toBe(200);
         const token=response.body.token;

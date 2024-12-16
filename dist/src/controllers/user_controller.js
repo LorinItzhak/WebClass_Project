@@ -25,7 +25,7 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             email: req.body.email,
             password: hashedPassword,
         });
-        res.status(200).send(user);
+        res.status(201).send(user);
     }
     catch (err) {
         res.status(400).send(err);
