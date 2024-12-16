@@ -23,8 +23,8 @@ const testUser = {
 beforeAll(async()=>{
      app= await initApp();
      await postModel.deleteMany();
-     const response = await request(app).post("/auth/register").send(testUser);
-     const response2 = await request(app).post("/auth/login").send(testUser);
+     const response = await request(app).post("/user/register").send(testUser);
+     const response2 = await request(app).post("/user/login").send(testUser);
      expect(response2.statusCode).toBe(200);
      accessToken = response2.body.token;
      testPost.owner = response2.body._id;

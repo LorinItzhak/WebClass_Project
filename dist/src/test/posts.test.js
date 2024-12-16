@@ -31,8 +31,8 @@ const testPost = {
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, server_1.default)();
     yield posts_model_1.default.deleteMany();
-    const response = yield (0, supertest_1.default)(app).post("/auth/register").send(testUser);
-    const response2 = yield (0, supertest_1.default)(app).post("/auth/login").send(testUser);
+    const response = yield (0, supertest_1.default)(app).post("/user/register").send(testUser);
+    const response2 = yield (0, supertest_1.default)(app).post("/user/login").send(testUser);
     expect(response2.statusCode).toBe(200);
     accessToken = response2.body.token;
     testPost.owner = response2.body._id;
