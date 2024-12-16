@@ -33,20 +33,7 @@ const testPost = {
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, server_1.default)();
     yield posts_model_1.default.deleteMany();
-    yield user_model_1.default.deleteMany();
-    // Register user
-    const registerResponse = yield (0, supertest_1.default)(app)
-        .post("/users/register")
-        .send(testUser);
-    expect(registerResponse.statusCode).toBe(201);
-    // Login user
-    const loginResponse = yield (0, supertest_1.default)(app)
-        .post("/users/login")
-        .send(testUser);
-    expect(loginResponse.statusCode).toBe(200);
-    accessToken = loginResponse.body.token;
-    userId = loginResponse.body._id;
-    testPost.owner = userId;
+
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
