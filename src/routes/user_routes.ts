@@ -1,16 +1,16 @@
 
 import express,{Request,Response} from 'express';
-const router = express.Router();
 import userController from '../controllers/user_controller';
 
+const router = express.Router();
 
-router.post('/register',(req:Request, res:Response) => {
-    userController.register(req,res);
-}); 
+router.post('/register', userController.register); 
 
-router.post('/login',(req:Request, res:Response) => {
-    userController.login(req,res);
-}); 
+router.post('/login',userController.login ); 
+
+router.post('/logout',userController.logout  );
+
+router.post('/refresh',userController.refresh);
 
 export default router;
  
