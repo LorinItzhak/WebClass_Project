@@ -34,7 +34,7 @@ const testUser: User = {
 describe("Auth test suite", () => {
   test("Auth test registration", async () => {
     const response = await request(app).post(baseUrl + "/register").send(testUser);
-    expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(201);
   });
 
   test("Auth test registration no password", async () => {
