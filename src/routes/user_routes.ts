@@ -1,7 +1,7 @@
-
-import express,{Request,Response} from 'express';
+import express, { Request, Response } from 'express';
 import userController from '../controllers/user_controller';
 const router = express.Router();
+
 /**
 * @swagger
 * tags:
@@ -64,7 +64,7 @@ const router = express.Router();
 *       500:
 *         description: Internal server error
 */
-router.post('/register', userController.register); 
+router.post('/register', userController.register);
 
 /**
 * @swagger
@@ -95,11 +95,11 @@ router.post('/register', userController.register);
 *               properties:
 *                 accessToken:
 *                   type: string
-*                    description: JWT access token
+*                   description: JWT access token
 *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 *                 refreshToken:
 *                   type: string
-*                  description: JWT refresh token
+*                   description: JWT refresh token
 *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 *                 _id:
 *                   type: string
@@ -113,7 +113,6 @@ router.post('/register', userController.register);
 *               example: incorrect email or password
 */
 router.post('/login', userController.login);
-
 
 /**
 * @swagger
