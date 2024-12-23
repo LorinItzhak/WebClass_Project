@@ -14,7 +14,7 @@ const register = async (req: Request, res: Response) => {
       email: req.body.email,
       password: hashedPassword,
     });
-    res.status(200).send(user);
+    res.status(201).send(user);
   } catch (err) {
     res.status(400).send(err);
   }
