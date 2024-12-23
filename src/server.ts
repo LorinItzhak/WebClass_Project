@@ -22,9 +22,9 @@ const options = {
     definition: {
       openapi: "3.0.0",
       info: {
-        title: "Web Dev 2025 REST API",
+        title: " Project Web Dev 2025 REST API",
         version: "1.0.0",
-        description: "REST server including authentication using JWT",
+        description: "REST server including authentication using JWT (API for user authentication, post management, and comments)",
       },
       servers: [{ url: "http://localhost:3003", },],
     },
