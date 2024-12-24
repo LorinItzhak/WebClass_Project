@@ -45,6 +45,7 @@ const router = express.Router();
 * /users/register:
 *   post:
 *     summary: Register a new user
+*     tags: [Auth]
 *     description: Register a new user with email and password
 *     requestBody:
 *       required: true
@@ -71,20 +72,14 @@ router.post('/register', userController.register);
 * /users/login:
 *   post:
 *     summary: User login
+*     tags: [Auth]
 *     description: Authenticates a user and returns access and refresh tokens.
 *     requestBody:
 *       required: true
 *       content:
 *         application/json:
 *           schema:
-*             type: object
-*             properties:
-*               email:
-*                 type: string
-*                 example: user@example.com
-*               password:
-*                 type: string
-*                 example: password123
+*             $ref: '#/components/schemas/User'
 *     responses:
 *       200:
 *         description: Successful login
@@ -119,6 +114,7 @@ router.post('/login', userController.login);
 * /users/logout:
 *   post:
 *     summary: User logout
+*     tags: [Auth]
 *     description: Logs out a user by invalidating the refresh token.
 *     requestBody:
 *       required: true
@@ -153,6 +149,7 @@ router.post('/logout', userController.logout);
 * /users/refresh:
 *   post:
 *     summary: Refresh tokens
+*     tags: [Auth]
 *     description: Refreshes the access and refresh tokens.
 *     requestBody:
 *       required: true

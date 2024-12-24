@@ -21,6 +21,9 @@ import {authMiddleware} from '../controllers/user_controller';
 *         - title
 *         - owner
 *       properties:
+*         id:
+*          type: string
+*          description: The auto-generated id of the post
 *         title:
 *           type: string
 *           description: The post title
@@ -34,6 +37,7 @@ import {authMiddleware} from '../controllers/user_controller';
 *         title: 'My First Post'
 *         content: 'This is the content of my first post.'
 *         owner: '60d0fe4f5311236168a109ca'
+*         id: '60d0fe4f5311236168a109ca'
 */
 
 
@@ -42,8 +46,8 @@ import {authMiddleware} from '../controllers/user_controller';
 * /posts:
 *   post:
 *     summary: Add a new post
-*     description: Add a new post to the database
 *     tags: [Posts]
+*     description: Add a new post to the database
 *     security:
 *       - bearerAuth: []
 *     requestBody:
@@ -51,7 +55,15 @@ import {authMiddleware} from '../controllers/user_controller';
 *       content:
 *         application/json:
 *           schema:
-*             $ref: '#/components/schemas/Post'
+*             type: object
+*             properties:
+*              title:
+*               type: string
+*              content:
+*               type: string
+*             required:
+*               - title
+*               - content
 *     responses:
 *       201:
 *         description: Post added successfully
@@ -71,8 +83,8 @@ router.post('/', authMiddleware, post_.AddANew.bind(post_));
 * /posts:
 *   get:
 *     summary: Get all posts
-*     description: Retrieve all posts from the database
 *     tags: [Posts]
+*     description: Retrieve all posts from the database
 *     responses:
 *       200:
 *         description: A list of posts
@@ -94,8 +106,8 @@ router.get('/', (req: Request, res: Response) => {
 * /posts/{id}:
 *   get:
 *     summary: Get a post by ID
-*     description: Retrieve a single post by its ID
 *     tags: [Posts]
+*     description: Retrieve a single post by its ID
 *     parameters:
 *       - in: path
 *         name: id
@@ -124,8 +136,8 @@ router.get('/:id', (req: Request, res: Response) => {
 * /posts/{id}:
 *   put:
 *     summary: Update a post
-*     description: Update a post by its ID
 *     tags: [Posts]
+*     description: Update a post by its ID
 *     parameters:
 *       - in: path
 *         name: id

@@ -17,11 +17,11 @@ import { authMiddleware } from '../controllers/user_controller';
 *     Comment:
 *       type: object
 *       required:
-*         - content
+*         - comment
 *         - owner
 *         - postId
 *       properties:
-*         content:
+*         comment:
 *           type: string
 *           description: The comment content
 *         owner:
@@ -31,7 +31,7 @@ import { authMiddleware } from '../controllers/user_controller';
 *           type: string
 *           description: The ID of the post the comment belongs to
 *       example:
-*         content: 'This is a comment'
+*         comment: 'This is a comment'
 *         owner: '60d0fe4f5311236168a109ca'
 *         postId: '60d0fe4f5311236168a109cb'
 */
