@@ -61,9 +61,7 @@ describe("Auth test suite", () => {
     testUser._id = response.body._id;
   });
 
-
-
-  test("Auth test login make sure tokens are diffresnt", async () => {
+  test("Auth test login make sure tokens are different", async () => {
     const response = await request(app).post(baseUrl + "/login").send(testUser);
     expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty("accessToken");
@@ -135,7 +133,6 @@ describe("Auth test suite", () => {
     expect(response3.statusCode).not.toBe(200);
   });
 
-
   test("Test Logout", async () => {
     const response = await request(app).post(baseUrl + "/login").send(testUser);
     expect(response.statusCode).toBe(200);
@@ -189,5 +186,25 @@ describe("Auth test suite", () => {
       owner: "Lorin",
     });
     expect(response4.statusCode).toBe(201);
+  });
+
+  test("Get user by ID", async () => {
+    const newUser = await userModel.create({ email: "unique1@test.com", password: "123456" });
+    const response = await request(app).get(`${baseUrl}/${newUser._id}`);
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toHaveProperty("email", "unique1@test.com");
+  });
+
+  test("Update user", async () => {
+    const newUser = await userModel.create({ email: "unique2@test.com", password: "123456" });
+    const response = await request(app).put(`${baseUrl}/${newUser._id}`).send({ email: "updated@test.com" });
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toHaveProperty("email", "updated@test.com");
+  });
+
+  test("Delete user", async () => {
+    const newUser = await userModel.create({ email: "unique3@test.com", password: "123456" });
+    const response = await request(app).delete(`${baseUrl}/${newUser._id}`);
+    expect(response.statusCode).toBe(200);
   });
 });
