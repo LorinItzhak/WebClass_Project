@@ -207,4 +207,19 @@ describe("Auth test suite", () => {
     const response = await request(app).delete(`${baseUrl}/${newUser._id}`);
     expect(response.statusCode).toBe(200);
   });
+
+  test("delete user fail", async () => {
+    const response = await request(app).delete(`${baseUrl}/123`);
+    expect(response.statusCode).not.toBe(200);
+  });
+
+  test("token secret undefined", async () => {
+    process.env.TOKEN_SECRET = "";
+    const response = await request(app).post(baseUrl + "/login").send(testUser);
+    expect(response.statusCode).toBe(400);
+    
+
+  });
+
+
 });
