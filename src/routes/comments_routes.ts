@@ -183,7 +183,7 @@ router.put('/:id', (req: Request, res: Response) => {
 *         description: Internal server error
 */
 router.delete('/:id', authMiddleware, (req: Request, res: Response) => {
-    comment_.deleteComment(req, res);
+    comment_.deleteById(req, res);
 });
 
 export default router;

@@ -116,4 +116,54 @@ describe("Posts test suite", () => {
         const response = await request(app).get("/posts/" + invalidId);
         expect(response.statusCode).toBe(404);
     });
+
+    test("test update post by id", async () => {
+        const updatedPost = {
+            title: "Updated title",
+            content: "Updated content",
+        };
+        const response = await request(app)
+            .put("/posts/" + postId)
+            .set({
+                authorization: "Bearer " + accessToken,
+            })
+            .send(updatedPost);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.title).toBe(updatedPost.title);
+        expect(response.body.content).toBe(updatedPost.content);
+    });
+
+    test("test update post by id fail", async () => {
+        const invalidId = new mongoose.Types.ObjectId().toString();
+        const updatedPost = {
+            title: "Updated title",
+            content: "Updated content",
+        };
+        const response = await request(app)
+            .put("/posts/" + invalidId)
+            .set({
+                authorization: "Bearer " + accessToken,
+            })
+            .send(updatedPost);
+        expect(response.statusCode).toBe(404);
+    });
+
+    test("test delete post by id", async () => {
+        const response = await request(app)
+            .delete("/posts/" + postId)
+            .set({
+                authorization: "Bearer " + accessToken,
+            });
+        expect(response.statusCode).toBe(200);
+    });
+
+    test("test delete post by id fail", async () => {
+        const invalidId = new mongoose.Types.ObjectId().toString();
+        const response = await request(app)
+            .delete("/posts/" + invalidId)
+            .set({
+                authorization: "Bearer " + accessToken,
+            });
+        expect(response.statusCode).toBe(404);
+    });
 });

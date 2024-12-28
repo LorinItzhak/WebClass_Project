@@ -188,4 +188,111 @@ router.post('/logout', userController.logout);
 */
 router.post('/refresh', userController.refresh);
 
+/**
+* @swagger
+* /users/{id}:
+*   get:
+*     summary: Get user by ID
+*     tags: [Auth]
+*     description: Retrieve a user by their ID.
+*     parameters:
+*       - in: path
+*         name: id
+*         schema:
+*           type: string
+*         required: true
+*         description: The user ID
+*     responses:
+*       200:
+*         description: User found
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/User'
+*       404:
+*         description: User not found
+*       400:
+*         description: Bad request
+*/
+router.get('/:id', userController.getUserById);
+
+/**
+* @swagger
+* /users:
+*   get:
+*     summary: Get all users
+*     tags: [Auth]
+*     description: Retrieve a list of all users.
+*     responses:
+*       200:
+*         description: A list of users
+*         content:
+*           application/json:
+*             schema:
+*               type: array
+*               items:
+*                 $ref: '#/components/schemas/User'
+*       400:
+*         description: Bad request
+*/
+router.get('/', userController.getAllUsers);
+
+/**
+* @swagger
+* /users/{id}:
+*   put:
+*     summary: Update user by ID
+*     tags: [Auth]
+*     description: Update a user's information by their ID.
+*     parameters:
+*       - in: path
+*         name: id
+*         schema:
+*           type: string
+*         required: true
+*         description: The user ID
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             $ref: '#/components/schemas/User'
+*     responses:
+*       200:
+*         description: User updated successfully
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/User'
+*       404:
+*         description: User not found
+*       400:
+*         description: Bad request
+*/
+router.put('/:id', userController.updateUser);
+
+/**
+* @swagger
+* /users/{id}:
+*   delete:
+*     summary: Delete user by ID
+*     tags: [Auth]
+*     description: Delete a user by their ID.
+*     parameters:
+*       - in: path
+*         name: id
+*         schema:
+*           type: string
+*         required: true
+*         description: The user ID
+*     responses:
+*       200:
+*         description: User deleted successfully
+*       404:
+*         description: User not found
+*       400:
+*         description: Bad request
+*/
+router.delete('/:id', userController.deleteUser);
+
 export default router;
