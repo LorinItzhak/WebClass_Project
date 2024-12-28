@@ -42,7 +42,6 @@ const generateTokens = (user: iUser): { refreshToken: string, accessToken: strin
   return { refreshToken: refreshToken, accessToken: accessToken };
 };
 
-
 const login = async (req: Request, res: Response) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -152,6 +151,53 @@ const refresh = async (req: Request, res: Response) => {
   }
 };
 
+const getUserById = async (req: Request, res: Response) => {
+  try {
+    const user = await userModel.findById(req.params.id);
+    if (!user) {
+      res.status(404).send("User not found");
+      return;
+    }
+    res.status(200).send(user);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
+
+const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await userModel.find();
+    res.status(200).send(users);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
+
+const updateUser = async (req: Request, res: Response) => {
+  try {
+    const user = await userModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!user) {
+      res.status(404).send("User not found");
+      return;
+    }
+    res.status(200).send(user);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
+
+const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const user = await userModel.findByIdAndDelete(req.params.id);
+    if (!user) {
+      res.status(404).send("User not found");
+      return;
+    }
+    res.status(200).send("User deleted");
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
 
 type Payload = {
   _id: string;
@@ -183,4 +229,8 @@ export default {
   login,
   refresh,
   logout,
+  getUserById,
+  getAllUsers,
+  updateUser,
+  deleteUser
 }

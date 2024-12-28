@@ -40,7 +40,6 @@ import {authMiddleware} from '../controllers/user_controller';
 *         id: '60d0fe4f5311236168a109ca'
 */
 
-
 /**
 * @swagger
 * /posts:
@@ -76,7 +75,7 @@ import {authMiddleware} from '../controllers/user_controller';
 *       500:
 *         description: Internal server error
 */
-router.post('/', authMiddleware, post_.AddANew.bind(post_)); 
+router.post('/', authMiddleware, post_.AddANew.bind(post_));
 
 /**
 * @swagger
@@ -169,9 +168,34 @@ router.put('/:id', (req: Request, res: Response) => {
     post_.updateA(req, res);
 });
 
-
-// router.delete('/:id', authMiddleware, (req: Request, res: Response) => {
-//     post_.deletePost(req, res);
-// });
+/**
+* @swagger
+* /posts/{id}:
+*   delete:
+*     summary: Delete a post
+*     tags: [Posts]
+*     description: Delete a post by its ID
+*     parameters:
+*       - in: path
+*         name: id
+*         schema:
+*           type: string
+*         required: true
+*         description: The post ID
+*     security:
+*       - bearerAuth: []
+*     responses:
+*       200:
+*         description: Post deleted successfully
+*       404:
+*         description: Post not found
+*       400:
+*         description: Invalid ID format
+*       500:
+*         description: Internal server error
+*/
+router.delete('/:id', authMiddleware, (req: Request, res: Response) => {
+    post_.deleteById(req, res);
+});
 
 export default router;

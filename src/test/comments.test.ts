@@ -2,8 +2,9 @@ import request from "supertest";
 import initApp from "../server";
 import mongoose from "mongoose";
 import commentModel from "../models/Comments_model";
-import { Express } from "express";
 import userModel from "../models/user_model";
+import postModel from "../models/posts_model";
+import { Express } from "express";
 
 let app: Express;
 
@@ -36,6 +37,7 @@ beforeAll(async () => {
     console.log('beforeAll');
     await commentModel.deleteMany();
     await userModel.deleteMany();
+    await postModel.deleteMany();
     
     // Register user
     const registerResponse = await request(app)
@@ -134,6 +136,53 @@ describe("Comments test suite", () => {
 
     test("test get Comment by id fail", async () => {
         const response = await request(app).get("/comments/67460dffc9211d4f36225657");
+        expect(response.statusCode).toBe(404);
+    });
+
+    test("test update Comment by id", async () => {
+        const updatedComment = {
+            comment: "updated content",
+        };
+        const response = await request(app)
+            .put("/comments/" + commentId)
+            .set({
+                authorization: "Bearer " + accessToken,
+            })
+            .send(updatedComment);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.comment).toBe(updatedComment.comment);
+    });
+
+    test("test update Comment by id fail", async () => {
+        const invalidId = new mongoose.Types.ObjectId().toString();
+        const updatedComment = {
+            comment: "updated content",
+        };
+        const response = await request(app)
+            .put("/comments/" + invalidId)
+            .set({
+                authorization: "Bearer " + accessToken,
+            })
+            .send(updatedComment);
+        expect(response.statusCode).toBe(404);
+    });
+
+    test("test delete Comment by id", async () => {
+        const response = await request(app)
+            .delete("/comments/" + commentId)
+            .set({
+                authorization: "Bearer " + accessToken,
+            });
+        expect(response.statusCode).toBe(200);
+    });
+
+    test("test delete Comment by id fail", async () => {
+        const invalidId = new mongoose.Types.ObjectId().toString();
+        const response = await request(app)
+            .delete("/comments/" + invalidId)
+            .set({
+                authorization: "Bearer " + accessToken,
+            });
         expect(response.statusCode).toBe(404);
     });
 });
