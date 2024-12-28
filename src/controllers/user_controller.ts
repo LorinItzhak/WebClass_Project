@@ -2,23 +2,41 @@ import { Request, Response, NextFunction } from "express";
 import userModel, { iUser } from "../models/user_model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { Document } from "mongoose";
+import mongoose, { Document } from "mongoose";
+const validateEmail = (email: string): boolean => {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+};
 
 const register = async (req: Request, res: Response) => {
   try {
-    const password = req.body.password;
+    const { email, password } = req.body;
+
+    // Validate email
+    if (!validateEmail(email)) {
+      res.status(400).send({ error: "Invalid email format" });
+      return;
+    }
+
+    // Check if email already exists
+    const existingUser = await userModel.findOne({ email });
+    if (existingUser) {
+      res.status(400).send({ error: "Email already exists" });
+      return;
+    }
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = await userModel.create({
-      email: req.body.email,
+      email: email,
       password: hashedPassword,
     });
     res.status(201).send(user);
   } catch (err) {
-    res.status(400).send(err);
+    res.status(400).send({ error: "Registration failed", details: err });
   }
-}
+};
 
 const generateTokens = (user: iUser): { refreshToken: string, accessToken: string } | null => {
   if (process.env.TOKEN_SECRET === undefined) {
@@ -43,36 +61,45 @@ const generateTokens = (user: iUser): { refreshToken: string, accessToken: strin
 };
 
 const login = async (req: Request, res: Response) => {
-  const email = req.body.email;
-  const password = req.body.password;
+  const { email, password } = req.body;
+
+  // Validate email
+  if (!validateEmail(email)) {
+    res.status(400).send({ error: "Invalid email format" });
+    return;
+  }
+
   try {
     const user = await userModel.findOne({ email: email });
     if (!user) {
-      res.status(400).send("incorrect email or password");
+      res.status(400).send({ error: "Incorrect email or password" });
       return;
     }
+
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
-      res.status(400).send("incorrect email or password");
+      res.status(400).send({ error: "Incorrect email or password" });
       return;
     }
+
     const tokens = generateTokens(user);
     if (!tokens) {
-      res.status(400).send("error");
+      res.status(500).send({ error: "Error generating tokens" });
       return;
     }
+
     if (user.refreshTokens == undefined) {
       user.refreshTokens = [];
     }
     user.refreshTokens.push(tokens.refreshToken);
-    user.save();
-    res.status(200).send(
-      {
-        ...tokens,
-        _id: user._id
-      });
+    await user.save();
+
+    res.status(200).send({
+      ...tokens,
+      _id: user._id
+    });
   } catch (err) {
-    res.status(400).send(err);
+    res.status(400).send({ error: "Login failed", details: err });
   }
 };
 
@@ -153,7 +180,8 @@ const refresh = async (req: Request, res: Response) => {
 
 const getUserById = async (req: Request, res: Response) => {
   try {
-    const user = await userModel.findById(req.params.id);
+    const userId = new mongoose.Types.ObjectId(req.params.id);
+    const user = await userModel.findById(userId);
     if (!user) {
       res.status(404).send("User not found");
       return;
@@ -175,9 +203,14 @@ const getAllUsers = async (req: Request, res: Response) => {
 
 const updateUser = async (req: Request, res: Response) => {
   try {
-    const user = await userModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const userId = new mongoose.Types.ObjectId(req.params.id);
+    const user = await userModel.findByIdAndUpdate(userId, req.body, { new: true });
     if (!user) {
       res.status(404).send("User not found");
+      return;
+    }
+    if (!validateEmail(user.email)) {
+      res.status(400).send({ error: "Invalid email format" });
       return;
     }
     res.status(200).send(user);
@@ -188,7 +221,8 @@ const updateUser = async (req: Request, res: Response) => {
 
 const deleteUser = async (req: Request, res: Response) => {
   try {
-    const user = await userModel.findByIdAndDelete(req.params.id);
+    const userId = new mongoose.Types.ObjectId(req.params.id);
+    const user = await userModel.findByIdAndDelete(userId);
     if(user){
     res.status(200).send("User deleted");
     }

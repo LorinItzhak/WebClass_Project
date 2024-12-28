@@ -36,7 +36,7 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 // const swaggerDocument = YAML.load(path.join(__dirname, '../swagger.yaml'));
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-  
+
 const initApp=()=> { 
     console.log('initApp start');    
     return new Promise<Express>((resolve,reject)=>{
