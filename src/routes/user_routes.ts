@@ -26,18 +26,27 @@ const router = express.Router();
 *     User:
 *       type: object
 *       required:
+*         - username
 *         - email
 *         - password
 *       properties:
+*         username:
+*           type: string
+*           description: The user username
 *         email:
 *           type: string
 *           description: The user email
 *         password:
 *           type: string
 *           description: The user password
+*         picture:
+*           type: string
+*           description: The user profile picture URL
 *       example:
+*         username: 'bob'
 *         email: 'bob@gmail.com'
 *         password: '123456'
+*         picture: '../../public/avatar.png'
 */
 
 /**
@@ -46,7 +55,7 @@ const router = express.Router();
 *   post:
 *     summary: Register a new user
 *     tags: [Auth]
-*     description: Register a new user with email and password
+*     description: Register a new user with username, email, and password
 *     requestBody:
 *       required: true
 *       content:
@@ -67,6 +76,7 @@ const router = express.Router();
 */
 router.post('/register', userController.register);
 
+
 /**
 * @swagger
 * /users/login:
@@ -79,7 +89,15 @@ router.post('/register', userController.register);
 *       content:
 *         application/json:
 *           schema:
-*             $ref: '#/components/schemas/User'
+*             type: object
+*             properties:
+*               username:
+*                 type: string
+*               password:
+*                 type: string
+*             required:
+*               - username
+*               - password
 *     responses:
 *       200:
 *         description: Successful login
@@ -100,12 +118,12 @@ router.post('/register', userController.register);
 *                   type: string
 *                   example: 60d0fe4f5311236168a109ca
 *       400:
-*         description: Incorrect email or password / Error generating tokens
+*         description: Incorrect username or password / Error generating tokens
 *         content:
 *           application/json:
 *             schema:
 *               type: string
-*               example: incorrect email or password
+*               example: incorrect username or password
 */
 router.post('/login', userController.login);
 

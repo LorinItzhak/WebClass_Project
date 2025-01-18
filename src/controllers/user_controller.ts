@@ -8,9 +8,28 @@ const validateEmail = (email: string): boolean => {
   return re.test(String(email).toLowerCase());
 };
 
+const validatePassword = (password: string): boolean => { 
+  const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+  return re.test(String(password));
+};
+
+
+
 const register = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { username, email, password, picture } = req.body;
+    //validate username
+    if (username.length < 3) {
+      res.status(400).send({ error: "Username must be at least 3 characters long" });
+      return;
+    }
+
+    //check if username already exists
+    const existingUsername = await userModel.findOne({ username: username });
+    if (existingUsername) {
+      res.status(400).send({ error: "Username already exists" });
+      return;
+    }
 
     // Validate email
     if (!validateEmail(email)) {
@@ -29,8 +48,10 @@ const register = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = await userModel.create({
+      username: username,
       email: email,
       password: hashedPassword,
+      picture: picture || "../../public/avatar.png"
     });
     res.status(201).send(user);
   } catch (err) {
@@ -61,24 +82,24 @@ const generateTokens = (user: iUser): { refreshToken: string, accessToken: strin
 };
 
 const login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
-  // Validate email
-  if (!validateEmail(email)) {
-    res.status(400).send({ error: "Invalid email format" });
+  //check if user exists
+  if (!username || !password) {
+    res.status(400).send({ error: "Incorrect user name or password" });
     return;
   }
 
   try {
-    const user = await userModel.findOne({ email: email });
+    const user = await userModel.findOne({ username: username });
     if (!user) {
-      res.status(400).send({ error: "Incorrect email or password" });
+      res.status(400).send({ error: "Incorrect user or password" });
       return;
     }
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
-      res.status(400).send({ error: "Incorrect email or password" });
+      res.status(400).send({ error: "Incorrect user or password" });
       return;
     }
 
@@ -204,15 +225,21 @@ const getAllUsers = async (req: Request, res: Response) => {
 const updateUser = async (req: Request, res: Response) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.params.id);
+    const { email, picture, username } = req.body;
+
+  
+    // Validate username
+    if (username && username.length < 3) {
+      res.status(400).send({ error: "Username must be at least 3 characters long" });
+      return;
+    }
+
     const user = await userModel.findByIdAndUpdate(userId, req.body, { new: true });
     if (!user) {
       res.status(404).send("User not found");
       return;
     }
-    if (!validateEmail(user.email)) {
-      res.status(400).send({ error: "Invalid email format" });
-      return;
-    }
+
     res.status(200).send(user);
   } catch (err) {
     res.status(400).send(err);

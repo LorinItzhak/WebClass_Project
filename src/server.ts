@@ -5,18 +5,31 @@ dotenv.config();
 import mongoose from "mongoose";
 import postsRoutes from './routes/posts_routes';
 import commentsRoutes from './routes/comments_routes';
+import  { NextFunction, Request, Response } from "express";
 import bodyParser from 'body-parser';
 import userRoutes from './routes/user_routes';
 import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUI from "swagger-ui-express";
+import fileRouter from "./routes/file_routes";
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
-app.use("/posts", postsRoutes);
-app.use("/comments", commentsRoutes);
-app.use("/users", userRoutes);
 
+
+const delay = (req: Request, res: Response, next: NextFunction) => {
+    const d = new Promise<void>((r) => setTimeout(() => r(), 2000));
+    d.then(() => next());
+  };
+  app.use("/posts", delay, postsRoutes);
+  app.use("/comments", delay, commentsRoutes);
+  app.use("/users", delay, userRoutes);
+  app.use("/file", fileRouter);
+  app.use("/public", express.static("public"));
+  app.use("/storage", express.static("storage"));
+  app.use(express.static("front"));
+  app.use("/avatar.png", express.static("public/avatar.png"));
+ 
 
 const options = {
     definition: {
