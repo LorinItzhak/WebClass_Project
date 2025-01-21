@@ -29,6 +29,16 @@ const delay = (req: Request, res: Response, next: NextFunction) => {
   app.use("/storage", express.static("storage"));
   app.use(express.static("front"));
   app.use("/avatar.png", express.static("public/avatar.png"));
+
+import cors from 'cors';
+// app.use(cors({
+//   origin: 'http://localhost:5173',  // frontend url
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//   allowedHeaders: ['Content-Type', 'Authorization']
+// }));
+app.use(cors());
+
+
  
 
 const options = {
