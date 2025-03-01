@@ -6,3 +6,4 @@ storage/
 .env_dev
 .env
 .env_test
+.env
