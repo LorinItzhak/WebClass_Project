@@ -12,7 +12,7 @@ import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUI from "swagger-ui-express";
 import fileRouter from "./routes/file_routes";
 import cors from 'cors';
-import passport from "./config/passport-config.ts";
+import passport from "./config/passport-config";
 import session from "express-session";
 
 

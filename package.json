@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "cp ./.env_dev .env && nodemon ./src/app.ts",
-    "start": "cp ./.env_dev .env && tsc && node ./dist/src/app.js",
+    "dev": "cp ./.env_d .env && nodemon ./src/app.ts",
+    "start": "cp ./.env_d .env && tsc && node ./dist/src/app.js",
     "test": "cp ./.env_test .env && tsc && jest --detectOpenHandles --forceExit --coverage --runInBand",
     "testUsers": "cp ./.env_test .env && tsc && jest --detectOpenHandles --forceExit user.test.ts",
     "testPosts": "cp ./.env_test .env && tsc && jest --detectOpenHandles --forceExit posts.test.ts",

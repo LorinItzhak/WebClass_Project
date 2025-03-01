@@ -3,7 +3,6 @@ dist/
 coverage/
 front/
 storage/
-.env_dev
-.env
+.env_d
 .env_test
 .env

@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import userController from '../controllers/user_controller';
-import passport from '../config/passport-config.ts';
+import passport from '../config/passport-config';
 const router = express.Router();
 
 /**
@@ -302,13 +302,31 @@ router.delete('/:id', userController.deleteUser);
 
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
+// router.get(
+//   "/google/callback",
+//   passport.authenticate("google", { failureRedirect: "/" }),
+//   (req, res) => {
+//     res.redirect("http://localhost:5173");
+//   }
+// );
+
+router.post("/google", async (req, res) => {
+  console.log("Google Login request received:", req.body);
+  res.send("Google login successful");
+});
+
+
 router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
-    res.redirect("http://localhost:5173/dashboard");
+    console.log("✅ Google Authentication Successful");
+    res.json({ success: true, user: req.user }); // מחזיר JSON
   }
 );
+
+
+
 
 // router.get("/logout", (req, res) => {
 //   req.logOut((err) => {
