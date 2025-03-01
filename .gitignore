@@ -4,3 +4,5 @@ coverage/
 front/
 storage/
 .env_dev
+.env
+.env_test
