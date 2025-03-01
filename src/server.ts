@@ -5,18 +5,72 @@ dotenv.config();
 import mongoose from "mongoose";
 import postsRoutes from './routes/posts_routes';
 import commentsRoutes from './routes/comments_routes';
+import  { NextFunction, Request, Response } from "express";
 import bodyParser from 'body-parser';
 import userRoutes from './routes/user_routes';
 import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUI from "swagger-ui-express";
+import fileRouter from "./routes/file_routes";
+import cors from 'cors';
+import passport from "./config/passport-config.ts";
+import session from "express-session";
+
+
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
-app.use("/posts", postsRoutes);
-app.use("/comments", commentsRoutes);
-app.use("/users", userRoutes);
 
+
+const delay = (req: Request, res: Response, next: NextFunction) => {
+    const d = new Promise<void>((r) => setTimeout(() => r(), 2000));
+    d.then(() => next());
+  };
+  app.use("/posts", delay, postsRoutes);
+  app.use("/comments", delay, commentsRoutes);
+  app.use("/users", delay, userRoutes);
+  app.use("/file", fileRouter);
+  app.use("/public", express.static("public"));
+  app.use("/storage", express.static("storage"));
+  app.use(express.static("front"));
+  app.use("/avatar.png", express.static("public/avatar.png"));
+
+  app.use(session({
+    secret: process.env.TOKEN_SECRET!,
+    resave: false,
+    saveUninitialized: false,
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+
+
+
+
+// app.use(cors({
+//   origin: 'http://localhost:5173',  // frontend url
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//   allowedHeaders: ['Content-Type', 'Authorization']
+// }));
+
+
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "*");
+    res.header("Access-Control-Allow-Headers", "*");
+    next();
+  });
+
+
+// app.use(cors({
+//     origin: "http://localhost:5173", // התאימי לכתובת של ה-Frontend שלך
+//     credentials: true
+// }));
+
+ 
 
 const options = {
     definition: {
