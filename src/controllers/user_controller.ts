@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from "express";
-import userModel, { iUser } from "../models/user_model";
 import bcrypt from "bcrypt";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import mongoose, { Document } from "mongoose";
+import userModel, { iUser } from "../models/user_model";
 
 import { OAuth2Client } from "google-auth-library";
 
@@ -33,7 +33,7 @@ const register = async (req: Request, res: Response) => {
     //check if username already exists
     const existingUsername = await userModel.findOne({ username: username });
     if (existingUsername) {
-      res.status(400).send({ error: "Username already exists" });
+      res.status(401).send({ error: "Username already exists" });
       return;
     }
 
@@ -307,9 +307,10 @@ const googleSignin = async (req: Request, res: Response) => {
        if (user == null) {
            user = await userModel.create(
                {
+                   'username': payload?.name || email, // הוספת שם משתמש
                    'email': email,
-                   'imgUrl': payload?.picture,
-                   'password': 'google-signin'
+                   'password': 'google-signin',
+                   'picture': payload?.picture // הוספת תמונה
                });
        }
        const tokens = generateTokens(user);
@@ -318,9 +319,44 @@ const googleSignin = async (req: Request, res: Response) => {
    } catch (err) {
        return res.status(400).send("error missing email or password");
    }
+  };
+ 
+  const checkUserExists = async (req: Request, res: Response): Promise<void> => {
+    console.log("🔹 קיבלנו בקשה לבדוק משתמש");
+    console.log("📩 פרמטרים שהתקבלו:", req.query);
+  
+    const { email, username } = req.query;
+  
+    if (!email || !username) {
+      console.log("❌ missing email or username in request");
+      res.status(400).json({ error: "Missing email or username in request" });
+      return;
+    }
+  
+    try {
+      const existingUser = await userModel.findOne({ $or: [{ email }, { username }] });
+  
+      console.log("🔍 user found", existingUser ? "yes" : "no");
+  
+      if (existingUser) {
+        res.status(200).json({ exists: true });
+        return;
+      }
+      res.status(200).json({ exists: false });
+    } catch (err) {
+      console.log("❌ שגיאה בשרת:", err);
+      res.status(500).json({ error: "Server error", details: err });
+    }
+  };
+  
+  export const getCurrentUser = (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
 
-   
-}
+    res.json({ user: req.user });
+};
+
 
 
 
@@ -334,5 +370,10 @@ export default {
   getUserById,
   getAllUsers,
   updateUser,
-  deleteUser
+  deleteUser,
+  getCurrentUser,
+  googleSignin,
+  checkUserExists,
+  authMiddleware,
+
 }

@@ -19,24 +19,38 @@ export class BaseController<T> {
         }
     }
 
+ 
+
     async deleteById(req: Request, res: Response) {
         const id = req.params.id;
+        console.log("Received request to delete post with ID:", id);
+    
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).send("Invalid ID format");
+            console.error("Invalid ID format:", id);
+            return res.status(400).json({ error: "Invalid ID format" });
         }
-
+    
         try {
             const deletedItem = await this.model.findByIdAndDelete(id);
-
+    
             if (!deletedItem) {
-                return res.status(404).send("Item not found");
+                console.log("Post not found with ID:", id);
+                return res.status(404).json({ error: "Item not found" });
             }
-
-            res.send(deletedItem);
+    
+            console.log("Post successfully deleted:", deletedItem);
+            res.status(200).json(deletedItem);
         } catch (err) {
-            res.status(400).send(err);
+            console.error("Error deleting post:", err); // 🔹 הדפס את השגיאה
+            if (err instanceof Error) {
+                res.status(500).json({ error: "Internal Server Error", details: err.message });
+            } else {
+                res.status(500).json({ error: "Internal Server Error" });
+            }
         }
     }
+
+    
 
     async getAll(req: Request, res: Response) {
         const filter = req.query;

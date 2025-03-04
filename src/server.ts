@@ -5,6 +5,7 @@ dotenv.config();
 import mongoose from "mongoose";
 import postsRoutes from './routes/posts_routes';
 import commentsRoutes from './routes/comments_routes';
+import likeRoutes from './routes/likes_routes';
 import  { NextFunction, Request, Response } from "express";
 import bodyParser from 'body-parser';
 import userRoutes from './routes/user_routes';
@@ -30,6 +31,8 @@ const delay = (req: Request, res: Response, next: NextFunction) => {
   app.use("/posts", delay, postsRoutes);
   app.use("/comments", delay, commentsRoutes);
   app.use("/users", delay, userRoutes);
+  app.use("/likes", delay, likeRoutes);
+
   app.use("/file", fileRouter);
   app.use("/public", express.static("public"));
   app.use("/storage", express.static("storage"));

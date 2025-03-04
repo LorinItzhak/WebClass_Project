@@ -27,18 +27,27 @@ const router = express.Router();
 *     User:
 *       type: object
 *       required:
+*         - username
 *         - email
 *         - password
 *       properties:
+*         username:
+*           type: string
+*           description: The user username
 *         email:
 *           type: string
 *           description: The user email
 *         password:
 *           type: string
 *           description: The user password
+*         picture:
+*           type: string
+*           description: The user picture URL
 *       example:
+*         username: 'bob'
 *         email: 'bob@gmail.com'
 *         password: '123456'
+*         picture: 'http://example.com/avatar.png'
 */
 
 /**
@@ -47,7 +56,7 @@ const router = express.Router();
 *   post:
 *     summary: Register a new user
 *     tags: [Auth]
-*     description: Register a new user with email and password
+*     description: Register a new user with username, email, and password
 *     requestBody:
 *       required: true
 *       content:
@@ -296,47 +305,23 @@ router.put('/:id', userController.updateUser);
 */
 router.delete('/:id', userController.deleteUser);
 
-
-
 // Sign in with Google
-
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
-
-// router.get(
-//   "/google/callback",
-//   passport.authenticate("google", { failureRedirect: "/" }),
-//   (req, res) => {
-//     res.redirect("http://localhost:5173");
-//   }
-// );
 
 router.post("/google", async (req, res) => {
   console.log("Google Login request received:", req.body);
   res.send("Google login successful");
 });
 
-
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
+  passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
-    console.log("✅ Google Authentication Successful");
-    res.json({ success: true, user: req.user }); // מחזיר JSON
+    res.redirect("/");
   }
 );
 
-
-
-
-// router.get("/logout", (req, res) => {
-//   req.logOut((err) => {
-//     if (err) {
-//       console.error("Logout error:", err);
-//     }
-//     res.redirect("/");
-//   });
-// });
+// Check if user exists
+router.get("/check", userController.checkUserExists);
 
 export default router;
-
-

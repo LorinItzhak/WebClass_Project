@@ -20,6 +20,7 @@ afterAll(async () => {
 const baseUrl = "/users";
 
 type User = {
+  username: string;
   email: string;
   password: string;
   accessToken?: string;
@@ -27,6 +28,7 @@ type User = {
   _id?: string;
 };
 const testUser: User = {
+  username: "user1",
   email: "user1@test.com",
   password: "123456",
 };
@@ -200,7 +202,7 @@ describe("Auth test suite", () => {
     expect(response3.statusCode).not.toBe(200);
   });
 
-  jest.setTimeout(20000);
+  jest.setTimeout(30000);
 
   test("Token expiration", async () => {
     const response = await request(app)
@@ -248,6 +250,7 @@ describe("Auth test suite", () => {
 
   test("Get user by ID", async () => {
     const newUser = await userModel.create({
+      username: "user2",
       email: "unique1@test.com",
       password: "123456",
     });
@@ -264,6 +267,7 @@ describe("Auth test suite", () => {
 
   test("Update user", async () => {
     const newUser = await userModel.create({
+      username: "user3",
       email: "unique2@test.com",
       password: "123456",
     });
@@ -276,6 +280,7 @@ describe("Auth test suite", () => {
 
   test("Delete user", async () => {
     const newUser = await userModel.create({
+      username: "user4",
       email: "unique3@test.com",
       password: "123456",
     });
@@ -290,12 +295,13 @@ describe("Auth test suite", () => {
 
   test("Update user with invalid data", async () => {
     const newUser = await userModel.create({
+      username: "user5",
       email: "unique4@test.com",
       password: "123456",
     });
     const response = await request(app)
       .put(`${baseUrl}/${newUser._id}`)
-      .send({ email: "invalid-email" });
+      .send({ username: "us" });
     expect(response.statusCode).toBe(400);
     expect(response.body).toHaveProperty("error");
   });

@@ -1,29 +1,29 @@
 ### Register a new user
-POST http://localhost:3000/users/register
+POST http://localhost:3003/users/register
 Content-Type: application/json
 
-{
-    "email": "newuser@example.com",
+{   "username": "newuser1",
+    "email": "newuser1@example.com",
     "password": "securepassword123"
 }
 
 ### User login
-POST http://localhost:3000/users/login
+POST http://localhost:3003/users/login
 Content-Type: application/json
 
-{
+{   "username": "newuser1",
     "email": "newuser@example.com",
     "password": "securepassword123"
 }
 
 ### Get all users (if implemented)
-GET http://localhost:3000/users
+GET http://localhost:3003/users
 
 ### Get a specific user by ID (if implemented)
-GET http://localhost:3000/users/123456789012345678901234
+GET http://localhost:3003/users/123456789012345678901234
 
 ### Update a user (if implemented)
-PUT http://localhost:3000/users/123456789012345678901234
+PUT http://localhost:3003/users/123456789012345678901234
 Content-Type: application/json
 
 {
@@ -31,4 +31,4 @@ Content-Type: application/json
 }
 
 ### Delete a user (if implemented)
-DELETE http://localhost:3000/users/123456789012345678901234
+DELETE http://localhost:3003/users/123456789012345678901234

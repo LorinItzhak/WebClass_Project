@@ -1,0 +1,36 @@
+
+//get all likes
+###
+GET http://localhost:3003/likes
+
+//get like by id
+###
+GET http://localhost:3003/likes/67c749a69d40c01fa20f0285
+
+//get likes by postId
+###
+GET http://localhost:3003/likes?postId=674f0eb7c8ec098c8fd76400
+
+//create like
+###
+POST  http://localhost:3003/likes
+Content-Type: application/json
+
+{
+    "postId": "674f0eb7c8ec098c8fd76400",
+    "owner": "yuli"
+}
+
+//update like
+###
+PUT  http://localhost:3003/likes/6756fb509e63a9f4710774da
+Content-Type: application/json
+
+{
+    "postId": "674f0eb7c8ec098c8fd76400"
+}
+
+//delete like
+###
+DELETE  http://localhost:3003/likes/6756fb509e63a9f4710774da
+Content-Type: application/json

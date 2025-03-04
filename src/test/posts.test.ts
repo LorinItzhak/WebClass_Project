@@ -8,6 +8,7 @@ import { Express } from "express";
 let app: Express;
 
 type User = {
+    username?: string;
     email: string;
     password: string;
     accessToken?: string;
@@ -16,6 +17,7 @@ type User = {
 }
 
 const testUser: User = {
+    username: "user1",
     email: "user1@test.com",
     password: "123456",
 };
@@ -149,13 +151,18 @@ describe("Posts test suite", () => {
     });
 
     test("test delete post by id", async () => {
-        const response = await request(app)
-            .delete("/posts/" + postId)
-            .set({
-                authorization: "Bearer " + accessToken,
-            });
+     
+        console.log("Attempting to delete post with ID:", postId);
+
+            const response = await request(app)
+            .delete(`/posts/${postId}`)
+            .set({ authorization: "Bearer " + accessToken });
+        
+        console.log("Delete Response:", response.status, response.body); // 🔹 בדוק את תגובת השרת
+    
         expect(response.statusCode).toBe(200);
     });
+    
 
     test("test delete post by id fail", async () => {
         const invalidId = new mongoose.Types.ObjectId().toString();
